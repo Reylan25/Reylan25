@@ -1,0 +1,28 @@
+# Save this file in the Reylan25/Reylan25 repo at: .github/workflows/summary-cards.yml
+# It generates profile cards as SVG files inside your own repo (folder: profile-summary-card-output),
+# so they don't depend on any third-party image server.
+name: GitHub-Profile-Summary-Cards
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # once a day
+  workflow_dispatch:       # lets you run it manually from the Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: generate-github-profile-summary-cards
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vn7n24fzkq/github-profile-summary-cards@release
+        env:
+          # Uses a personal access token named SUMMARY_GITHUB_TOKEN if you add one, otherwise the built-in token.
+          GITHUB_TOKEN: ${{ secrets.SUMMARY_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          USERNAME: ${{ github.repository_owner }}
+          BRANCH_NAME: "main"
+          UTC_OFFSET: 8
+          AUTO_PUSH: true
+          THEME: ""
